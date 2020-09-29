@@ -51,5 +51,7 @@ public interface Partitioner<T> {
 
   String generatePartitionedPath(String topic, String encodedPartition);
 
+  boolean encodedPartitionIsFullPath();
+
   List<T> partitionFields();
 }

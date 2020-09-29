@@ -15,6 +15,7 @@
 
 package io.confluent.connect.storage.partitioner;
 
+import io.confluent.connect.storage.common.ComposableConfig;
 import org.apache.kafka.common.config.AbstractConfig;
 import org.apache.kafka.common.config.ConfigDef;
 import org.apache.kafka.common.config.ConfigDef.Importance;
@@ -26,8 +27,6 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-import io.confluent.connect.storage.common.ComposableConfig;
 
 public class PartitionerConfig extends AbstractConfig implements ComposableConfig {
 
@@ -101,6 +100,28 @@ public class PartitionerConfig extends AbstractConfig implements ComposableConfi
       "The record field to be used as timestamp by the timestamp extractor.";
   public static final String TIMESTAMP_FIELD_NAME_DEFAULT = "timestamp";
   public static final String TIMESTAMP_FIELD_NAME_DISPLAY = "Record Field for Timestamp Extractor";
+
+  public static final String PARTITION_CUSTOM_PATH_CONFIG = "partition.custom.path";
+  public static final String PARTITION_CUSTOM_PATH_DOC =
+      "The complete path under which the file will be created in the bucket when CustomPartitioner is used."
+      + "Variables are referenced with ${NAME}. Default variables are:"
+      + "- topicsDir: topics directory (topics.dir),"
+      + "- dirDeli: directory delimiter (directory.delim),"
+      + "- fileDeli: file delimiter (file.delim),"
+      + "- topic: Kafka topic"
+      + "- partition: topic partition"
+      + "- offset: topic offset";
+  public static final String PARTITION_CUSTOM_PATH_DEFAULT =
+      "${topicDir}${dirDeli}${topic}${dirDeli}"
+      + "${topic}${fileDeli}${partition}${fileDeli}${offset}";
+  public static final String PARTITION_CUSTOM_PATH_DISPLAY = "Partition Custom Path";
+
+  public static final String PARTITION_CUSTOM_FIELDS_CONFIG = "partition.custom.path";
+  public static final String PARTITION_CUSTOM_FIELDS_DOC =
+      "Extract fields from the record to be used in the custom path. The config must be a comma separated list"
+      + "following this model: <map_path>$<Key|Value>:<var_name>";
+  public static final String PARTITION_CUSTOM_FIELDS_DEFAULT = "";
+  public static final String PARTITION_CUSTOM_FIELDS_DISPLAY = "Partition Custom Fields";
 
   /**
    * Create a new configuration definition.
@@ -209,6 +230,26 @@ public class PartitionerConfig extends AbstractConfig implements ComposableConfi
           ++orderInGroup,
           Width.LONG,
           TIMESTAMP_FIELD_NAME_DISPLAY);
+
+      configDef.define(PARTITION_CUSTOM_PATH_CONFIG,
+          Type.STRING,
+          PARTITION_CUSTOM_PATH_DEFAULT,
+          Importance.MEDIUM,
+          PARTITION_CUSTOM_PATH_DOC,
+          group,
+          ++orderInGroup,
+          Width.LONG,
+          PARTITION_CUSTOM_PATH_DISPLAY);
+
+      configDef.define(PARTITION_CUSTOM_FIELDS_CONFIG,
+              Type.STRING,
+              PARTITION_CUSTOM_FIELDS_DEFAULT,
+              Importance.MEDIUM,
+              PARTITION_CUSTOM_FIELDS_DOC,
+              group,
+              ++orderInGroup,
+              Width.LONG,
+              PARTITION_CUSTOM_FIELDS_DISPLAY);
     }
 
     return configDef;

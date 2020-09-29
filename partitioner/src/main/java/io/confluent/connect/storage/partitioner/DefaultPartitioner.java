@@ -15,14 +15,13 @@
 
 package io.confluent.connect.storage.partitioner;
 
+import io.confluent.connect.storage.common.SchemaGenerator;
+import io.confluent.connect.storage.common.StorageCommonConfig;
 import org.apache.kafka.common.config.ConfigException;
 import org.apache.kafka.connect.sink.SinkRecord;
 
 import java.util.List;
 import java.util.Map;
-
-import io.confluent.connect.storage.common.SchemaGenerator;
-import io.confluent.connect.storage.common.StorageCommonConfig;
 
 /**
  *
@@ -52,6 +51,10 @@ public class DefaultPartitioner<T> implements Partitioner<T> {
   @Override
   public String generatePartitionedPath(String topic, String encodedPartition) {
     return topic + delim + encodedPartition;
+  }
+
+  public boolean encodedPartitionIsFullPath() {
+    return false;
   }
 
   @Override
