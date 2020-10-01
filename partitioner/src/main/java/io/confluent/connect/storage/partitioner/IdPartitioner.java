@@ -38,7 +38,7 @@ public class IdPartitioner<T> extends DefaultPartitioner<T> {
         try {
             return encodeWithId(sinkRecord);
         } catch (Exception e) {
-            log.error(
+            log.warn(
                 String.format("IdPartitioner threw an exception: consult the malformed event at '%s%s%s%s%s%s%s.json'",
                     fallback,
                     this.delim,
