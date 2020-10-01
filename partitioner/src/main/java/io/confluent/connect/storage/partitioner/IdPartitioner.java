@@ -46,7 +46,7 @@ public class IdPartitioner<T> extends DefaultPartitioner<T> {
                     fileDelim,
                     sinkRecord.kafkaPartition(),
                     fileDelim,
-                    sinkRecord.kafkaOffset()),
+                    String.format("%010d", sinkRecord.kafkaOffset())),
                 e);
             return fallback;
         }
